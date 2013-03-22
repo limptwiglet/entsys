@@ -36,5 +36,4 @@ describe('manager', function () {
 			expect(spy.callCount).to.equal(2);
 		});
 	});
-
 });
