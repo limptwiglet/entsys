@@ -3,6 +3,7 @@ var sinon = require('sinon');
 
 var Manager = require('../lib/manager');
 var System = require('../lib/system');
+var Component = require('../lib/component');
 
 describe('Entity manager', function () {
     var manager;
@@ -43,6 +44,19 @@ describe('Entity manager', function () {
         var entity2 = manager.createEntity(id);
         expect(entity2).to.not.be.undefined;
         expect(entity2._id).to.equal(id);
+    });
+
+    it('should be able to add a component to an entity', function () {
+        var component = new Component();
+        var component2 = new Component();
+        component2._name = 'component2';
+
+        var entity = manager.createEntity();
+        entity.addComponent(component);
+        entity.addComponent(component2);
+
+        expect(manager._entityMap[entity._id][manager.getComponentRef(component)]).to.not.be.undefined;
+        expect(manager._entityMap[entity._id][manager.getComponentRef(component2)]).to.not.be.undefined;
     });
 
     it('should be able to add systems', function () {
