@@ -27,15 +27,22 @@ describe('Entity manager', function () {
         expect(ref).to.equal(componentRef);
     });
 
-    it('should be able to create a new entity with or without a passed in id', function () {
-        var id = 10;
-        var entity = manager.createEntity();
-        var entity2 = manager.createEntity(id);
+    it('should have a generateId method for creating unique ids', function () {
+        var id = manager._generateId();
 
+        expect(id).to.equal(0);
+        expect(manager._ID).to.equal(1);
+    });
+
+    it('should be able to create a new entity with or without a passed in id', function () {
+        var entity = manager.createEntity();
         expect(entity._id).to.equal(0);
         expect(entity).to.not.be.undefined;
+
+        var id = 10;
+        var entity2 = manager.createEntity(id);
         expect(entity2).to.not.be.undefined;
-        expect(entity2._id).to.equalt(id);
+        expect(entity2._id).to.equal(id);
     });
 
     it('should be able to add systems', function () {
@@ -57,13 +64,11 @@ describe('Entity manager', function () {
         expect(spy.callCount).to.equal(2);
     });
 
-    it('should update systems entities when manager calls process method', function () {
+    it('should pass correct family to system when calling process method', function () {
         var system = new System();
 
         manager.add(system);
 
         manager.process();
-
-        expect(system._entities.length).to.be.greater.than(1);
     });
 });
