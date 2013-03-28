@@ -35,6 +35,23 @@ describe('Entity manager', function () {
         expect(manager._ID).to.equal(1);
     });
 
+    it('should have a createFamily method for creating new entity component families', function () {
+        var components = [
+            {
+                _name: 'test'
+            },
+            {
+                _name: 'test2'
+            }
+        ];
+        var familyName = components[0]._name + ' ' + components[1]._name;
+        var family = manager.createFamily(components);
+
+        expect(manager._families[familyName]).to.not.be.undefined;
+        expect(manager._componentFamilyMap['test']).to.contain(familyName);
+        expect(manager._componentFamilyMap['test2']).to.contain(familyName);
+    });
+
     it('should be able to create a new entity with or without a passed in id', function () {
         var entity = manager.createEntity();
         expect(entity._id).to.equal(0);
