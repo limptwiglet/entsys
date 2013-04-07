@@ -76,6 +76,20 @@ describe('Entity manager', function () {
         expect(manager._entityMap[entity._id][manager.getComponentRef(component2)]).to.not.be.undefined;
     });
 
+    it('should be able to remove a component from an entity', function () {
+        var component = new Component();
+        component._name = 'component2';
+
+        var entity = manager.createEntity();
+        entity.addComponent(component);
+
+        expect(manager._entityMap[entity._id][manager.getComponentRef(component)]).to.not.be.undefined;
+
+		entity.removeComponent(component._name);
+
+        expect(manager._entityMap[entity._id][manager.getComponentRef(component)]).to.be.undefined;
+	});
+
     it('should be able to add systems', function () {
         expect(manager._systems).to.have.length(0);
 
