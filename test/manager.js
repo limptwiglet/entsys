@@ -97,9 +97,16 @@ describe('Entity manager', function () {
 
     it('should pass correct family to system when calling process method', function () {
         var system = new System();
+        var spy = system.process = sinon.spy();
 
         manager.add(system);
-
         manager.process();
+
+        expect(spy.called).to.have.be.true;
+
+        var arg = spy.args[0][0];
+
+        expect(arg).to.not.be.undefined;
+        expect(arg).to.not.be.a('array');
     });
 });
