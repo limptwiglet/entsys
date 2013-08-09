@@ -12,6 +12,9 @@ describe('Entity manager', function () {
         manager = new Manager();
     });
 
+    //////////////////////////////////////////////////////
+    // HELPERS
+    //////////////////////////////////////////////////////
     it('should initialize a empty manager', function () {
         expect(manager).to.not.be.undefined;
         expect(manager._ID).to.equal(0);
@@ -63,17 +66,23 @@ describe('Entity manager', function () {
         expect(entity2._id).to.equal(id);
     });
 
-    it('should be able to add a component to an entity', function () {
-        var component = new Component();
-        var component2 = new Component();
-        component2._name = 'component2';
+    describe('addComponent', function () {
+        it('should be able to add a component to an entity', function () {
+            var component = new Component();
+            var component2 = new Component();
+            component2._name = 'component2';
 
-        var entity = manager.createEntity();
-        entity.addComponent(component);
-        entity.addComponent(component2);
+            var entity = manager.createEntity();
+            entity.addComponent(component);
+            entity.addComponent(component2);
 
-        expect(manager._entityMap[entity._id][manager.getComponentRef(component)]).to.not.be.undefined;
-        expect(manager._entityMap[entity._id][manager.getComponentRef(component2)]).to.not.be.undefined;
+            expect(manager._entityMap[entity._id][manager.getComponentRef(component)]).to.not.be.undefined;
+            expect(manager._entityMap[entity._id][manager.getComponentRef(component2)]).to.not.be.undefined;
+        });
+
+        it('should update families when adding components', function () {
+
+        });
     });
 
     it('should be able to remove a component from an entity', function () {
@@ -121,6 +130,6 @@ describe('Entity manager', function () {
         var arg = spy.args[0][0];
 
         expect(arg).to.not.be.undefined;
-        expect(arg).to.not.be.a('array');
+        expect(arg).to.be.an('array');
     });
 });
