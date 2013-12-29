@@ -1,0 +1,16 @@
+{
+  "name": "entsys",
+  "version": "0.0.1",
+  "description": "Entity system implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --harmony ./node_modules/mocha/bin/mocha --recursive"
+  },
+  "author": "Mark Gerrard",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "~1.8.1",
+    "mocha": "~1.16.2",
+    "lodash": "~2.4.1"
+  }
+}
