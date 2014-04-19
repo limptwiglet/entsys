@@ -31,6 +31,27 @@ describe('Entity manager', function () {
         expect(ref).to.equal(componentRef);
     });
 
+    it('should have a getFamilyRef method for returning components family name', function () {
+        var components = [
+            {
+                _name: 'b'
+            },
+            {
+                _name: 'g'
+            },
+            {
+                _name: '1'
+            },
+            {
+                _name: '0'
+            }
+        ];
+        var exp = '0-1-b-g';
+
+        var res = manager._getFamilyRef.apply(manager, components);
+		expect(res).to.equal(exp);
+    });
+
     it('should have a generateId method for creating unique ids', function () {
         var id = manager._generateId();
 
