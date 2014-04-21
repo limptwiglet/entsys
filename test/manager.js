@@ -12,52 +12,58 @@ describe('Entity manager', function () {
         manager = new Manager();
     });
 
-    //////////////////////////////////////////////////////
-    // HELPERS
-    //////////////////////////////////////////////////////
-    it('should initialize a empty manager', function () {
-        expect(manager).to.not.be.undefined;
-        expect(manager._ID).to.equal(0);
+    describe('initalization', function () {
+		it('should initialize a empty manager', function () {
+			expect(manager).to.not.be.undefined;
+			expect(manager._ID).to.equal(0);
+		});
     });
 
-    it('should have a getComponentRef method for getting a components unique reference', function () {
-        var componentRef = 'flanger';
-        var component = {
-            _name: componentRef
-        };
+    describe('_generateId', function () {
+		it('should have a generateId method for creating unique ids', function () {
+			var id = manager._generateId();
 
-        var ref = manager.getComponentRef(component);
-
-        expect(ref).to.equal(componentRef);
+			expect(id).to.equal(0);
+			expect(manager._ID).to.equal(1);
+		});
     });
 
-    it('should have a getFamilyRef method for returning components family name', function () {
-        var components = [
-            {
-                _name: 'b'
-            },
-            {
-                _name: 'g'
-            },
-            {
-                _name: '1'
-            },
-            {
-                _name: '0'
-            }
-        ];
-        var exp = '0-1-b-g';
+    describe('getComponentRef', function () {
+		it('should have a getComponentRef method for getting a components unique reference', function () {
+			var componentRef = 'flanger';
+			var component = {
+				_name: componentRef
+			};
 
-        var res = manager._getFamilyRef.apply(manager, components);
-		expect(res).to.equal(exp);
+			var ref = manager.getComponentRef(component);
+
+			expect(ref).to.equal(componentRef);
+		});
     });
 
-    it('should have a generateId method for creating unique ids', function () {
-        var id = manager._generateId();
+    describe('getFamilyRef', function () {
+		it('should have a getFamilyRef method for returning components family name', function () {
+			var components = [
+				{
+					_name: 'b'
+				},
+				{
+					_name: 'g'
+				},
+				{
+					_name: '1'
+				},
+				{
+					_name: '0'
+				}
+			];
+			var exp = '0-1-b-g';
 
-        expect(id).to.equal(0);
-        expect(manager._ID).to.equal(1);
+			var res = manager._getFamilyRef.apply(manager, components);
+			expect(res).to.equal(exp);
+		});
     });
+
 
     it('should have a createFamily method for creating new entity component families', function () {
         var components = [
@@ -87,7 +93,7 @@ describe('Entity manager', function () {
         expect(entity2._id).to.equal(id);
     });
 
-    describe('addComponent', function () {
+    describe('add component', function () {
         it('should be able to add a component to an entity', function () {
             var component = new Component();
             var component2 = new Component();
@@ -101,56 +107,68 @@ describe('Entity manager', function () {
             expect(manager._entityMap[entity._id][manager.getComponentRef(component2)]).to.not.be.undefined;
         });
 
-        it('should update families when adding components', function () {
+        it('should add entity to family if component matches family', function () {
+			var entity = manager.createEntity();
+			var comp = {_name: 'comp'};
+			entity.addComponent(comp);
 
+			var family1 = manager.getFamily(comp);
+
+			expect(family1).to.include.keys(entity._id);
         });
     });
 
-    it('should be able to remove a component from an entity', function () {
-        var component = new Component();
-        component._name = 'component2';
+    describe('remove component', function () {
+		it('should be able to remove a component from an entity', function () {
+			var component = new Component();
+			component._name = 'component2';
 
-        var entity = manager.createEntity();
-        entity.addComponent(component);
+			var entity = manager.createEntity();
+			entity.addComponent(component);
 
-        expect(manager._entityMap[entity._id][manager.getComponentRef(component)]).to.not.be.undefined;
+			expect(manager._entityMap[entity._id][manager.getComponentRef(component)]).to.not.be.undefined;
 
-		entity.removeComponent(component._name);
+			entity.removeComponent(component._name);
 
-        expect(manager._entityMap[entity._id][manager.getComponentRef(component)]).to.be.undefined;
+			expect(manager._entityMap[entity._id][manager.getComponentRef(component)]).to.be.undefined;
+		});
+    });
+
+	describe('add systems and components', function () {
+		it('should be able to add systems', function () {
+			expect(manager._systems).to.have.length(0);
+
+			manager.add(new System(), new System());
+
+			expect(manager._systems).to.have.length(2);
+		});
 	});
 
-    it('should be able to add systems', function () {
-        expect(manager._systems).to.have.length(0);
+	describe('process', function () {
+		it('should call process on each system when process is called on manager', function () {
+			var system = new System();
+			var system2 = new System();
+			var spy = system2.process = system.process = sinon.spy();
 
-        manager.add(new System(), new System());
+			manager.add(system, system2);
+			manager.process();
 
-        expect(manager._systems).to.have.length(2);
-    });
+			expect(spy.callCount).to.equal(2);
+		});
 
-    it('should call process on each system when process is called on manager', function () {
-        var system = new System();
-        var system2 = new System();
-        var spy = system2.process = system.process = sinon.spy();
+		it('should pass correct family to system when calling process method', function () {
+			var system = new System();
+			var spy = system.process = sinon.spy();
 
-        manager.add(system, system2);
-        manager.process();
+			manager.add(system);
+			manager.process();
 
-        expect(spy.callCount).to.equal(2);
-    });
+			expect(spy.called).to.have.be.true;
 
-    it('should pass correct family to system when calling process method', function () {
-        var system = new System();
-        var spy = system.process = sinon.spy();
+			var arg = spy.args[0][0];
 
-        manager.add(system);
-        manager.process();
-
-        expect(spy.called).to.have.be.true;
-
-        var arg = spy.args[0][0];
-
-        expect(arg).to.not.be.undefined;
-        expect(arg).to.be.an('array');
-    });
+			expect(arg).to.not.be.undefined;
+			expect(arg).to.be.an('array');
+		});
+	});
 });
