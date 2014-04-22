@@ -4,17 +4,20 @@
   "description": "Entity system for node.js",
   "main": "index.js",
   "directories": {
-	"test": "test"
+    "test": "test"
   },
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha --recursive"
   },
-  "devDependencies" : {
-	"mocha": "*",
-	"chai": "*",
-	"sinon": "*"
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*",
+    "sinon": "*"
   },
   "repository": "git://github.com:limptwiglet/entsys",
   "author": "Mark Gerrard <limptwiglet@gmail.com>",
-  "license": "BSD"
+  "license": "BSD",
+  "dependencies": {
+    "lodash": "~2.4.1"
+  }
 }
