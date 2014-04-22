@@ -75,7 +75,7 @@ describe('Entity manager', function () {
             }
         ];
         var familyName = manager._getFamilyRef.apply(manager, components);
-        var family = manager.createFamily(components);
+        var family = manager.createFamily.apply(manager, components);
 
         expect(manager._families[familyName]).to.not.be.undefined;
         expect(manager._componentFamilyMap['test']).to.contain(familyName);
@@ -112,7 +112,7 @@ describe('Entity manager', function () {
 			var comp = {_name: 'comp'};
 			entity.addComponent(comp);
 
-			var family1 = manager.getFamily(comp);
+			var family1 = manager.createFamily(comp);
 
 			expect(family1).to.include.keys(entity._id);
         });
