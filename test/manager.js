@@ -74,7 +74,7 @@ describe('Entity manager', function () {
                 _name: 'test2'
             }
         ];
-        var familyName = components[0]._name + ' ' + components[1]._name;
+        var familyName = manager._getFamilyRef.apply(manager, components);
         var family = manager.createFamily(components);
 
         expect(manager._families[familyName]).to.not.be.undefined;
@@ -107,7 +107,7 @@ describe('Entity manager', function () {
             expect(manager._entityMap[entity._id][manager.getComponentRef(component2)]).to.not.be.undefined;
         });
 
-        it('should add entity to family if component matches family', function () {
+        it('should add entity to family when adding component that matches families', function () {
 			var entity = manager.createEntity();
 			var comp = {_name: 'comp'};
 			entity.addComponent(comp);
