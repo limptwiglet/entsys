@@ -128,7 +128,7 @@ describe('Manager', function () {
 			var ref1 = manager._getFamilyReference([c1]);
 			var ref2 = manager._getFamilyReference([c2]);
 
-			var f1 = manager.getFamily(c2);
+			var f1 = manager.getFamily(c1);
 			var f2 = manager.getFamily(c2);
 
 			var entity = manager.createEntity();
