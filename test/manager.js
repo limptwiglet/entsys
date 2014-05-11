@@ -8,29 +8,35 @@ describe('Manager', function () {
         manager = new Manager();
     });
 
+
     it('should initalize correctly', function () {
         expect(manager.entities).to.be.empty;
     });
+
 
     it('should create incremental ids', function () {
         expect(manager._getId()).to.equal(0);
         expect(manager._getId()).to.equal(1);
     });
 
+
     it('should add an entity to the entities map when calling createEntity', function () {
         manager.createEntity();
         expect(manager.entities).to.not.be.empty;
     });
+
 
     it('should return the entity object when calling get', function () {
        var entity =  manager.createEntity();
        expect(manager.get(entity._id)).to.be.defined;
     });
 
+
     it('should return a components reference when calling _getComponentRef', function () {
         var name = 'testcomp';
         expect(manager._getComponentRef({name: name})).to.equal(name);
     });
+
 
     it('should add a component to an entity object', function () {
         var component = {
@@ -74,10 +80,11 @@ describe('Manager', function () {
     });
 
 
-    it('should create a family if one dosnt exist', function () {
+    it('should return a family or create a new one when calling getFamily', function () {
         var family = 'component';
         manager.getFamily(family);
         expect(manager.families[family]).to.exist;
+        expect(manager.getFamily(family)).to.exist;
 
         var comp1 = 'component';
         var comp2 = 'component2';
@@ -85,4 +92,52 @@ describe('Manager', function () {
         manager.getFamily(comp1, comp2);
         expect(manager.families[ref]).to.exist;
     });
+
+
+	describe('adding/removing components', function () {
+		var c1 = {
+			name: 'c1',
+			data: {
+				testFamily: 'test'
+			}
+		};
+		var c2 = {
+			name: 'c2',
+			data: {
+				test: 'test'
+			}
+		};
+
+		it('should add entity to correct family when adding components', function () {
+			var f1 = manager.getFamily(c1, c2);
+			var f2 = manager.getFamily(c2);
+
+			var entity = manager.createEntity();
+			manager.addComponent(entity._id, c1);
+			manager.addComponent(entity._id, c2);
+
+			expect(f1).to.not.be.empty;
+			expect(f1).to.contain(manager.entities[entity._id]);
+
+			expect(f2).to.not.be.empty;
+			expect(f2).to.contain(manager.entities[entity._id]);
+		});
+
+		it('should remove entity from families when removing components', function () {
+
+			var ref1 = manager._getFamilyReference([c1]);
+			var ref2 = manager._getFamilyReference([c2]);
+
+			var f1 = manager.getFamily(c2);
+			var f2 = manager.getFamily(c2);
+
+			var entity = manager.createEntity();
+			manager.addComponent(entity._id, c1);
+			manager.addComponent(entity._id, c2);
+			manager.removeComponent(entity._id, c1);
+
+			expect(manager.get(entity._id)).to.not.contain.keys(ref1);
+			expect(f1).to.be.empty;
+		});
+	});
 });
