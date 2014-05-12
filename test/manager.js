@@ -124,12 +124,19 @@ describe('Manager', function () {
 		});
 
 		it('should update component entity map', function () {
+			var entMap = manager.componentEntityMap;
 			var e1 = manager.createEntity().addComponent(c1).addComponent(c2);
 			var e2 = manager.createEntity().addComponent(c2).addComponent(c1);
 
-			expect(manager.componentEntityMap).to.have.keys(c1.name, c2.name);
-			expect(manager.componentEntityMap[c1.name]).to.contain(e1._id, e2._id);
-			expect(manager.componentEntityMap[c2.name]).to.contain(e1._id, e2._id);
+			expect(entMap).to.have.keys(c1.name, c2.name);
+			expect(entMap[c1.name]).to.contain(e1._id, e2._id);
+			expect(entMap[c2.name]).to.contain(e1._id, e2._id);
+
+			e1.removeComponent(c1);
+			e2.removeComponent(c1);
+
+			expect(entMap[c1.name]).to.not.contain(e1._id);
+			expect(entMap[c1.name]).to.not.contain(e2._id);
 		});
 
 
