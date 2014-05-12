@@ -153,7 +153,6 @@ describe('Manager', function () {
 
 			expect(f2).to.not.be.empty;
 			expect(f2).to.contain(manager.entities[entity._id]);
-
 		});
 
 		it('should remove entity from families when removing components', function () {
