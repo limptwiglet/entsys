@@ -123,6 +123,32 @@ describe('Manager', function () {
 			expect(f2).to.contain(manager.entities[entity._id]);
 		});
 
+		it('should update component entity map', function () {
+			var e1 = manager.createEntity().addComponent(c1).addComponent(c2);
+			var e2 = manager.createEntity().addComponent(c2).addComponent(c1);
+
+			expect(manager.componentEntityMap).to.have.keys(c1.name, c2.name);
+			expect(manager.componentEntityMap[c1.name]).to.contain(e1._id, e2._id);
+			expect(manager.componentEntityMap[c2.name]).to.contain(e1._id, e2._id);
+		});
+
+
+		it('should add entities to families when they are created', function () {
+			var entity = manager.createEntity();
+			manager.addComponent(entity._id, c1);
+			manager.addComponent(entity._id, c2);
+
+			var f1 = manager.getFamily(c1, c2);
+			var f2 = manager.getFamily(c2);
+
+			expect(f1).to.not.be.empty;
+			expect(f1).to.contain(manager.entities[entity._id]);
+
+			expect(f2).to.not.be.empty;
+			expect(f2).to.contain(manager.entities[entity._id]);
+
+		});
+
 		it('should remove entity from families when removing components', function () {
 
 			var ref1 = manager._getFamilyReference([c1]);
