@@ -123,6 +123,21 @@ describe('Manager', function () {
 			expect(f2).to.contain(manager.entities[entity._id]);
 		});
 
+
+		it('should not add entity to family if it alreayd exists', function () {
+			var f1 = manager.getFamily(c1, c2);
+
+			var entity = manager.createEntity();
+			entity.addComponent(c1);
+
+			expect(f1).to.contain(manager.entities[entity._id]);
+
+			entity.addComponent({name: 'c1', data: {boom: 'bang'}});
+
+			expect(f1).to.have.length(1);
+		});
+
+
 		it('should update component entity map', function () {
 			var entMap = manager.componentEntityMap;
 			var e1 = manager.createEntity().addComponent(c1).addComponent(c2);
@@ -154,6 +169,7 @@ describe('Manager', function () {
 			expect(f2).to.not.be.empty;
 			expect(f2).to.contain(manager.entities[entity._id]);
 		});
+
 
 		it('should remove entity from families when removing components', function () {
 

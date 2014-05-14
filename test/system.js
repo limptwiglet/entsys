@@ -23,16 +23,29 @@ describe('Systems', function () {
 
 
 	it('should add family to system', function () {
-		var system = new System({
+		var s1 = new System({
 			components: [c1, c2]
 		});
-		manager.addSystem(system);
+		var s2 = new System({
+			components: [c3]
+		});
 
-		manager.createEntity().addComponent(c1).addComponent(c2);
-		manager.createEntity().addComponent(c2).addComponent(c3);
-		manager.createEntity().addComponent(c1).addComponent(c3);
+		manager.addSystem(s1);
 
-		expect(system.family).to.not.be.undefined;
-		expect(system.family).to.have.length(3);
+		var e1 = manager.createEntity().addComponent(c1).addComponent(c2);
+		var e2 = manager.createEntity().addComponent(c2).addComponent(c3);
+		var e3 = manager.createEntity().addComponent(c1).addComponent(c3);
+
+		manager.addSystem(s2);
+
+		expect(s1.family).to.not.be.undefined;
+		expect(s1.family).to.have.length(3);
+
+		expect(s2.family).to.not.be.undefined;
+		expect(s2.family).to.have.length(2);
+
+		e2.removeComponent(c3);
+
+		expect(s2.family).to.have.length(1)
 	});
 });
