@@ -1,3 +1,4 @@
+var sinon = require('sinon');
 var expect = require('chai').expect;
 var Manager = require('../lib/manager');
 
@@ -172,7 +173,6 @@ describe('Manager', function () {
 
 
 		it('should remove entity from families when removing components', function () {
-
 			var ref1 = manager._getFamilyReference([c1]);
 			var ref2 = manager._getFamilyReference([c2]);
 
@@ -186,6 +186,19 @@ describe('Manager', function () {
 
 			expect(manager.get(entity._id)).to.not.contain.keys(ref1);
 			expect(f1).to.be.empty;
+		});
+	});
+
+
+	describe('systems', function () {
+		it('should call each systems process method when calling manager process', function () {
+			var system = new System();
+			var spy = sinon.spy(system, 'process');
+
+			manager.addSystem(system);
+			manager.process();
+
+			expect(spy.called).to.be.true;
 		});
 	});
 });
